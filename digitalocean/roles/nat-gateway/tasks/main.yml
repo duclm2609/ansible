@@ -13,3 +13,13 @@
       - iptables
       - iptables-persistent
       - net-tools
+- name: Get droplet public interface name
+  ansible.builtin.shell: route -n | awk '$1 == "0.0.0.0" {print $8}'
+  register: public_interface
+- name: Translate traffic from VPC network’s subnet to the public IP of the NAT gateway droplet
+  ansible.builtin.iptables:
+    table: nat
+    chain: POSTROUTING
+    source: "{{ vpc_network_prefix }}"
+    out_interface: "{{ public_interface.stdout_lines }}"
+    jump: MASQUERADE
