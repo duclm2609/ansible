@@ -1,0 +1,4 @@
+- hosts: natgateway
+  roles:
+    - role: nat-gateway
+      become: true

@@ -1,0 +1,15 @@
+---
+# tasks file for nat-gateway
+- name: Enable IP forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+- name: Install required packages
+  ansible.builtin.apt:
+    pkg:
+      - iptables
+      - iptables-persistent
+      - net-tools
